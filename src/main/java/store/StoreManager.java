@@ -42,7 +42,13 @@ public class StoreManager {
         for (int index = START_INDEX; index < storeProducts.size(); index++) {
             setUpStock(storeProducts, index);
         }
-        LocalDateTime now = DateTimes.now();
+        for (String key : eventProductInventory.keySet()) {
+            if (!generalProductInventory.containsKey(key)) {
+                Product product = eventProductInventory.get(key);
+                generalProductInventory.put(key, new Product(product.getName(), product.getPrice(), 0, "null"));
+            }
+        }
+
     }
 
     public void setUpPromotions(List<String> storePromotions) {
