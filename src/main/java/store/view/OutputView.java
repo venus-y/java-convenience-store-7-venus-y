@@ -18,16 +18,16 @@ public class OutputView {
         List<OrderItem> orderedItems = receipt.getOrderedItems();
         for (OrderItem orderedItem : orderedItems) {
             String orderedPrice = DECIMAL_FORMAT.format(orderedItem.getTotalPrice());
-            System.out.printf("%-15s %5d %10d%n", orderedItem.getName(), orderedItem.getQuantity(), orderedItem.getTotalPrice());
+            System.out.printf("%-15s %3d %10d%n", orderedItem.getName(), orderedItem.getQuantity(), orderedItem.getTotalPrice());
         }
     }
 
     private void displayTotalResult(Receipt receipt, String totalPrice) {
-        System.out.println("==============================");
-        System.out.println("총구매액" + "\t\t\t" + receipt.getTotalQuantity() + "\t\t\t" + totalPrice);
-        System.out.println("행사할인\t\t\t -" + DECIMAL_FORMAT.format(receipt.getPromotionalDiscountPrice()));
-        System.out.println("멤버십할인\t\t\t -" + DECIMAL_FORMAT.format(receipt.getMemberShipDiscountPrice()));
-        System.out.println("내실돈\t\t\t" + DECIMAL_FORMAT.format(receipt.getFinalPrice()));
+        System.out.println("===============================");
+        System.out.println("총구매액" + "\t\t\t\t" + receipt.getTotalQuantity() + "\t\t" + totalPrice);
+        System.out.println("행사할인\t\t\t\t\t\t -" + DECIMAL_FORMAT.format(receipt.getPromotionalDiscountPrice()));
+        System.out.println("멤버십할인\t\t\t\t\t -" + DECIMAL_FORMAT.format(receipt.getMemberShipDiscountPrice()));
+        System.out.println("내실돈\t\t\t\t\t\t" + DECIMAL_FORMAT.format(receipt.getFinalPrice()));
     }
 
     public void showCurrentStatus(Map<String, Product> generalProductInventory, Map<String, Product> eventProductInventory) {
@@ -82,7 +82,7 @@ public class OutputView {
 
     public void showReceipt(Receipt receipt, String membershipChoice) {
         System.out.println("===========W 편의점=============");
-        System.out.println("상품명		수량     	금액");
+        System.out.println("상품명\t\t\t수량\t\t\t금액");
         displayOrderedProductsDetails(receipt);
         String totalPrice = DECIMAL_FORMAT.format(receipt.getTotalPrice());
         displayReceivedPromotionDetails(receipt);
