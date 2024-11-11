@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertNowTest;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
+import static store.constant.ErrorMessage.EXCEEDS_AVAILABLE_STOCK;
 import static store.constant.ErrorMessage.INVALID_INPUT;
 import static store.constant.ErrorMessage.INVALID_ORDER_PRODUCT_FORMAT;
 import static store.constant.ErrorMessage.INVALID_QUANTITY_ZERO;
@@ -67,14 +68,13 @@ class ApplicationTest extends NsTest {
         });
     }
 
-//    @Test
-//    구매요청 수량 초과 검증 로직이 컨트롤러로 와야 할 것 같다.
-//    void 재고보다_많은_구매요청() {
-//        assertSimpleTest(() -> {
-//            runException("[콜라-25]", "Y");
-//            assertThat(output()).contains(INVALID_INPUT.getValue());
-//        });
-//    }
+    @Test
+    void 재고보다_많은_구매요청() {
+        assertSimpleTest(() -> {
+            runException("[콜라-25]");
+            assertThat(output()).contains(EXCEEDS_AVAILABLE_STOCK.getValue());
+        });
+    }
 
     @Test
     void 추가구매_의사에_잘못된_값_입력() {
