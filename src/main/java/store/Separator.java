@@ -17,10 +17,10 @@ public class Separator {
         return product.substring(orderDetailsPrefixPos + INCREMENT_STEP, orderDetailsDelimiterPos);
     }
 
-    public static String separateProductQuantity(String product) {
+    public static int separateProductQuantity(String product) {
         int orderDetailsDelimiterPos = product.indexOf(ORDER_DETAILS_DELIMITER);
         int orderDetailsSuffixPos = product.indexOf(ORDER_DETAILS_SUFFIX);
-        return product.substring(orderDetailsDelimiterPos + INCREMENT_STEP, orderDetailsSuffixPos);
+        return Integer.parseInt(product.substring(orderDetailsDelimiterPos + INCREMENT_STEP, orderDetailsSuffixPos));
     }
 
 }
