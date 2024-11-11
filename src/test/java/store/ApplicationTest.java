@@ -1,6 +1,7 @@
 package store;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -58,6 +59,52 @@ class ApplicationTest extends NsTest {
             run("[감자칩-2]", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("내실돈3,000");
         }, LocalDate.of(2024, 2, 1).atStartOfDay());
+    }
+
+    @Test
+    void 프로모션_상품을_추가로_받는_테스트() {
+        assertSimpleTest(() -> {
+            runException("[콜라-5]", "Y", "Y");
+            assertThat(output()).contains("행사할인\t\t\t\t\t\t -2,000", "총구매액\t\t\t\t6\t\t6,000", "콜라                6       6000", "내실돈\t\t\t\t\t\t4,000");
+        });
+    }
+
+    @Test
+    @DisplayName("추가 구매 요청 시 이전 주문으로 인해 갱신된 재고가 카탈로그에 반영되었는지 검증")
+    void 재고_갱신여부_검증() {
+        assertSimpleTest(() -> {
+            runException("[콜라-6]", "Y", "Y", "Y");
+            assertThat(output()).contains("콜라 1,000원 4개 탄산2+1");
+        });
+    }
+
+
+    @Test
+    @DisplayName("콜라 5개 구매 후, 11개를 재구매하는데 프로모션 수량은 부족한 경우 나머지는 정가로 결제하는 테스트")
+    void 두번에_걸친_구매_요청() {
+        assertSimpleTest(() -> {
+            runException("[콜라-5]", "Y", "Y", "Y", "[콜라-11]", "Y", "Y");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈4,000", "내실돈7,600");
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"[콜라-25]", "[정식도시락-10]"})
+    @DisplayName("이벤트 상품의 경우, 이벤트재고 + 일반 재고 < 요청수량, 일반 상품의 경우 일반 재고 < 요청수량임을 검증")
+    void 상품_종류에_따른_재고_초과_테스트(String orderItems) {
+        assertSimpleTest(() -> {
+            runException(orderItems);
+            assertThat(output()).contains(EXCEEDS_AVAILABLE_STOCK.getValue());
+        });
+    }
+
+    @Test
+    @DisplayName("콜라 5개를 구매 후, 11개를 재구매하는데 프로모션이 적용되지 않는 수량은 제외하고 결제하는 테스트")
+    void 프로모션_적용_수량만_구매() {
+        assertSimpleTest(() -> {
+            runException("[콜라-5]", "Y", "Y", "Y", "[콜라-11]", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈4,000", "내실돈2,000");
+        });
     }
 
     @Test
